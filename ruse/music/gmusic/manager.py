@@ -1,8 +1,11 @@
+from threading import Thread
 from gmusicapi import Mobileclient
 import time
 from ruse.aural.vlc.manager import VlcManager
+from ruse.aural.vlc import vlc
 import pprint
 from ruse.etc.config import config
+
 
 class MusicManager(object):
 
@@ -11,58 +14,69 @@ class MusicManager(object):
         self.recently_searched = {}
         self.api = Mobileclient()
         self.api.login(config.GOOGLE_USERNAME, config.GOOGLE_PASSWORD)
-        self.vlc = VlcManager()
+        self.queue = []
+        self.current_index = len(self.queue)-1
+        self.vlc = VlcManager(self.on_complete)
 
     def play_song(self, id):
-        print "play"
-        url = self.api.get_stream_url(id, config.GOOGLE_STREAMKEY)
-        self.playing_songs[url] = self.recently_searched[id]
-        self.vlc.playSong(url)
+        self.queue_song(id)
+        self.current_index = len(self.queue)-1
+        self.load_song()
 
     def queue_song(self, id):
-        url = self.api.get_stream_url(id, config.GOOGLE_STREAMKEY)
-        self.playing_songs[url] = self.recently_searched[id]
-        self.vlc.queueSong(url)
+        self.queue.append(self.recently_searched[id])
 
     def next(self):
-        print "next"
-        self.vlc.next()
+        self.current_index += 1
+        self.load_song()
 
     def prev(self):
-        print "prev"
-        self.vlc.prev()
+        self.current_index -= 1
+        self.load_song()
 
     def pause(self):
-        self.vlc.pause()
+        self.vlc.vlc_pause()
 
     def resume(self):
-        self.vlc.resume()
+        self.vlc.vlc_resume()
 
     def volume(self, val):
-        self.vlc.setVolume(val)
+        self.vlc.vlc_volume(val)
 
     def delete(self, id):
-        self.vlc.delete(id)
+        del self.queue[id]
+        self.load_song()
 
     def go_to(self, id):
-        self.vlc.go_to(id)
+        self.current_index = id
+        self.load_song()
+
+    def on_complete(self, *args, **kwargs):
+        print "Complete"
+
+    def load_song(self):
+        if self.current_index < len(self.queue):
+            song = self.queue[self.current_index]
+            url = self.api.get_stream_url(song['nid'], config.GOOGLE_STREAMKEY)
+            self.vlc.vlc_play(url)
+
+
 
     def get_status(self):
-        status = self.vlc.get_status()
-        queue = status['queue']
-        patched_queue = []
-        for song in queue:
-            patched_song = self.playing_songs[song['uri']]
+        status = self.vlc.vlc_status()
 
-            if 'current' in song:
-                status[u'current'] = self.playing_songs[song['uri']]
+        if status['state'] == vlc.State.Ended:
+            if self.current_index != len(self.queue)-1:
+                self.next()
 
-            patched_song[u'vlcid'] = song['id']
-            patched_song[u'current'] = 'current' in song
+        del status['state']
 
-            patched_queue.append(patched_song)
-
-        status['queue'] = patched_queue
+        status['queue'] = self.queue[:]
+        for i in range(len(status['queue'])):
+            status['queue'][i]['vlcid'] = i
+            if i == self.current_index:
+                status['queue'][i]['current'] = True
+                status['current'] = status['queue'][i]
         return status
 
     def search(self, query):
@@ -82,16 +96,39 @@ class MusicManager(object):
 
         return results
 
+    def get_album_details(self, id):
+        print id
+        results = self.api.get_album_info(album_id=id, include_tracks=True)
+        for song in results['tracks']:
+            song['albumArtRef'] = song['albumArtRef'][0]['url']
+            song['artistId'] = song['artistId'][0]
+            self.recently_searched[song['nid']] = song
+        return results
+
+    def play_album(self, args):
+        album = self.get_album_details(args)
+        for index in range(len(album['tracks'])):
+            song = album['tracks'][index]
+            if index == 0:
+                self.play_song(song['nid'])
+            else:
+                self.queue_song(song['nid'])
+
+
+
+
 if __name__ == "__main__":
     manager = MusicManager()
-    results = manager.search('1901')
-    id = results['song_hits'][0]['nid']
+    results = manager.get_album_details('Bfr2onjv7g7tm4rzosewnnwxxyy')
+    id = results['tracks'][0]['nid']
     manager.play_song(id)
     manager.volume(100)
 
+    import pprint
+    printer = pprint.PrettyPrinter(indent=2)
     while True:
-        pprinter = pprint.PrettyPrinter(indent=3)
-        pprinter.pprint(manager.get_status())
         time.sleep(1)
+        printer.pprint(manager.get_status())
+
 
 

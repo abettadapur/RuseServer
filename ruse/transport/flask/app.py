@@ -47,6 +47,9 @@ class RuseNamespace(BaseNamespace):
         print args
         music_manager.play_song(args)
 
+    def on_playalbum(self, args):
+        music_manager.play_album(args.encode('ascii'))
+
     def on_queue(self, args):
         music_manager.queue_song(args)
 
