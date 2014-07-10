@@ -20,6 +20,12 @@ def search():
     results = music_manager.search(query)
     return jsonify(**results)
 
+@app.route('/album', methods=["GET"])
+def get_album():
+    id = request.args.get("id")
+    album = music_manager.get_album_details(id)
+    return jsonify(**album)
+
 @app.route('/socket.io/<path:remaining>')
 def socketio(remaining):
     print "Rem: " + remaining
@@ -48,10 +54,13 @@ class RuseNamespace(BaseNamespace):
         music_manager.play_song(args)
 
     def on_playalbum(self, args):
-        music_manager.play_album(args.encode('ascii'))
+        music_manager.play_album(args)
 
     def on_queue(self, args):
         music_manager.queue_song(args)
+
+    def on_queuealbum(self, args):
+        music_manager.queue_album(args)
 
     def on_volume(self, args):
         music_manager.volume(args)

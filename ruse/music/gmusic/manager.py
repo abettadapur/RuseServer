@@ -17,6 +17,9 @@ class MusicManager(object):
         self.queue = []
         self.current_index = len(self.queue)-1
         self.vlc = VlcManager(self.on_complete)
+        self.state_thread = Thread(target=self.check_state)
+        self.state_thread.daemon=True
+        self.state_thread.start()
 
     def play_song(self, id):
         self.queue_song(id)
@@ -44,8 +47,14 @@ class MusicManager(object):
         self.vlc.vlc_volume(val)
 
     def delete(self, id):
-        del self.queue[id]
-        self.load_song()
+        if id > self.current_index:
+            del self.queue[id]
+        elif id < self.current_index:
+            del self.queue[id]
+            self.current_index-=1
+        else:
+            del self.queue[id]
+            self.load_song()
 
     def go_to(self, id):
         self.current_index = id
@@ -60,17 +69,18 @@ class MusicManager(object):
             url = self.api.get_stream_url(song['nid'], config.GOOGLE_STREAMKEY)
             self.vlc.vlc_play(url)
 
+    def check_state(self):
+        while True:
+            status = self.vlc.player.get_state()
+            if status == vlc.State.Ended:
+                if self.current_index != len(self.queue)-1:
+                    self.next()
 
+            time.sleep(1)
 
     def get_status(self):
+
         status = self.vlc.vlc_status()
-
-        if status['state'] == vlc.State.Ended:
-            if self.current_index != len(self.queue)-1:
-                self.next()
-
-        del status['state']
-
         status['queue'] = self.queue[:]
         for i in range(len(status['queue'])):
             status['queue'][i]['vlcid'] = i
@@ -91,7 +101,8 @@ class MusicManager(object):
         results['song_hits'] = [song['track'] for song in results['song_hits']]
         for song in results['song_hits']:
             song['albumArtRef'] = song['albumArtRef'][0]['url']
-            song['artistId'] = song['artistId'][0]
+            if 'artistId' in song:
+                song['artistId'] = song['artistId'][0]
             self.recently_searched[song['nid']] = song
 
         return results
@@ -99,9 +110,11 @@ class MusicManager(object):
     def get_album_details(self, id):
         print id
         results = self.api.get_album_info(album_id=id, include_tracks=True)
+        results['artistId'] = results['artistId'][0]
         for song in results['tracks']:
             song['albumArtRef'] = song['albumArtRef'][0]['url']
-            song['artistId'] = song['artistId'][0]
+            if 'artistId' in song:
+                song['artistId'] = song['artistId'][0]
             self.recently_searched[song['nid']] = song
         return results
 
@@ -114,7 +127,10 @@ class MusicManager(object):
             else:
                 self.queue_song(song['nid'])
 
-
+    def queue_album(self, args):
+        album = self.get_album_details(args)
+        for song in album['tracks']:
+            self.queue_song(song['nid'])
 
 
 if __name__ == "__main__":

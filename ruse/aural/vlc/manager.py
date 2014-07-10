@@ -29,7 +29,6 @@ class VlcManager(object):
             'length': int(self.player.get_length()/1000),
             'time': int(self.player.get_time()/1000),
             'playing': self.player.get_state() == vlc.State.Playing,
-            'state': self.player.get_state()
         }
         status['time'] = 0 if status['time'] == -1 else status['time']
         status['volume'] = 0 if status['volume'] == -1 else status['volume']
