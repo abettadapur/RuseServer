@@ -40,7 +40,7 @@ class RuseNamespace(BaseNamespace):
         def sendStatus():
             while True:
                 status = music_manager.get_status()
-                print "Publishing: " + str(status)
+                #print "Publishing: " + str(status)
                 self.emit("status", json.dumps(status))
                 gevent.sleep(1)
 
@@ -76,9 +76,6 @@ class RuseNamespace(BaseNamespace):
 
     def on_prev(self, args):
         music_manager.prev()
-
-    def on_volume(self, args):
-        music_manager.volume(args)
 
     def on_delete(self, args):
         music_manager.delete(args)
