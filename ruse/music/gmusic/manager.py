@@ -3,31 +3,58 @@ from gmusicapi import Mobileclient
 import time
 from ruse.aural.vlc.manager import VlcManager
 from ruse.aural.vlc import vlc
-import pprint
 from ruse.etc.config import config
 
 
 class MusicManager(object):
-
     def __init__(self):
-        self.playing_songs = {}
         self.recently_searched = {}
+
         self.api = Mobileclient()
         self.api.login(config.GOOGLE_USERNAME, config.GOOGLE_PASSWORD)
+
         self.queue = []
-        self.current_index = len(self.queue)-1
-        self.vlc = VlcManager(self.on_complete)
+        self.current_index = len(self.queue) - 1
+
+        self.vlc = VlcManager()
+
         self.state_thread = Thread(target=self.check_state)
-        self.state_thread.daemon=True
+        self.state_thread.daemon = True
         self.state_thread.start()
 
     def play_song(self, id):
         self.queue_song(id)
-        self.current_index = len(self.queue)-1
+        self.current_index = len(self.queue) - 1
         self.load_song()
 
     def queue_song(self, id):
         self.queue.append(self.recently_searched[id])
+
+    def play_radio_station(self, id):
+        results = self.api.get_station_tracks(id, num_tracks=40)
+
+        for song in results:
+            song['albumArtRef'] = song['albumArtRef'][0]['url']
+            if 'artistId' in song:
+                song['artistId'] = song['artistId'][0]
+
+        self.current_index = len(self.queue) - 1
+        self.queue.append(results)
+        self.load_song()
+
+    def play_album(self, args):
+        album = self.get_album_details(args)
+        for index in range(len(album['tracks'])):
+            song = album['tracks'][index]
+            if index == 0:
+                self.play_song(song['nid'])
+            else:
+                self.queue_song(song['nid'])
+
+    def queue_album(self, args):
+        album = self.get_album_details(args)
+        for song in album['tracks']:
+            self.queue_song(song['nid'])
 
     def next(self):
         self.current_index += 1
@@ -51,7 +78,7 @@ class MusicManager(object):
             del self.queue[id]
         elif id < self.current_index:
             del self.queue[id]
-            self.current_index-=1
+            self.current_index -= 1
         else:
             del self.queue[id]
             self.load_song()
@@ -59,9 +86,6 @@ class MusicManager(object):
     def go_to(self, id):
         self.current_index = id
         self.load_song()
-
-    def on_complete(self, *args, **kwargs):
-        print "Complete"
 
     def load_song(self):
         if self.current_index < len(self.queue):
@@ -73,7 +97,7 @@ class MusicManager(object):
         while True:
             status = self.vlc.player.get_state()
             if status == vlc.State.Ended:
-                if self.current_index != len(self.queue)-1:
+                if self.current_index != len(self.queue) - 1:
                     self.next()
 
             time.sleep(1)
@@ -108,7 +132,6 @@ class MusicManager(object):
         return results
 
     def get_album_details(self, id):
-        print id
         results = self.api.get_album_info(album_id=id, include_tracks=True)
         results['artistId'] = results['artistId'][0]
         for song in results['tracks']:
@@ -118,33 +141,27 @@ class MusicManager(object):
             self.recently_searched[song['nid']] = song
         return results
 
-    def play_album(self, args):
-        album = self.get_album_details(args)
-        for index in range(len(album['tracks'])):
-            song = album['tracks'][index]
-            if index == 0:
-                self.play_song(song['nid'])
-            else:
-                self.queue_song(song['nid'])
+    def get_artist_details(self, id):
+        pass
 
-    def queue_album(self, args):
-        album = self.get_album_details(args)
-        for song in album['tracks']:
-            self.queue_song(song['nid'])
+    def create_radio_station(self, name, id):
+        if id[0] == 'A':
+            station_id = self.api.create_station(name, artist_id=id)
 
+        elif id[0] == 'B':
+            station_id = self.api.create_station(name, album_id=id)
 
-if __name__ == "__main__":
-    manager = MusicManager()
-    results = manager.get_album_details('Bfr2onjv7g7tm4rzosewnnwxxyy')
-    id = results['tracks'][0]['nid']
-    manager.play_song(id)
-    manager.volume(100)
+        else:
+            station_id = self.api.create_station(name, track_id=id)
 
-    import pprint
-    printer = pprint.PrettyPrinter(indent=2)
-    while True:
-        time.sleep(1)
-        printer.pprint(manager.get_status())
+        return station_id
+
+    def get_radio_stations(self):
+        return self.api.get_all_stations()
+
+    def flush(self):
+        self.vlc.vlc_stop()
+        self.queue = []
 
 
 

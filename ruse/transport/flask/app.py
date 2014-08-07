@@ -1,11 +1,10 @@
 import json
-from flask import Flask, render_template, request, flash, jsonify
+from flask import Flask, request
 from ruse.music.gmusic.manager import MusicManager
 from socketio import socketio_manage
 import gevent
 import logging
 from socketio.namespace import BaseNamespace
-from socketio.mixins import BroadcastMixin
 
 logging.basicConfig()
 app = Flask(__name__)
@@ -18,13 +17,26 @@ music_manager = MusicManager()
 def search():
     query = request.args.get('query')
     results = music_manager.search(query)
-    return jsonify(**results)
+    return json.dumps(results)
 
 @app.route('/album', methods=["GET"])
 def get_album():
     id = request.args.get("id")
     album = music_manager.get_album_details(id)
-    return jsonify(**album)
+    return json.dumps(album)
+
+@app.route('/stations', methods=["GET"])
+def get_stations():
+    stations = music_manager.get_radio_stations()
+    print stations
+    return json.dumps(stations)
+
+@app.route('/stations/create', methods=["GET"])
+def create_radio_station():
+    name = request.args.get('name')
+    id = request.args.get('id')
+    station_id = music_manager.create_radio_station(name, id)
+    return json.dumps({'station_id': station_id})
 
 @app.route('/socket.io/<path:remaining>')
 def socketio(remaining):
@@ -82,6 +94,9 @@ class RuseNamespace(BaseNamespace):
 
     def on_goto(self, args):
         music_manager.go_to(args)
+
+    def on_flush(self, args):
+        music_manager.flush()
 
 
 
