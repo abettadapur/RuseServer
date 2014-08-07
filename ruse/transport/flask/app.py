@@ -25,6 +25,12 @@ def get_album():
     album = music_manager.get_album_details(id)
     return json.dumps(album)
 
+@app.route('/artist', methods=["GET"])
+def get_artist():
+    id = request.args.get("id")
+    artist = music_manager.get_artist_details(id)
+    return json.dumps(artist)
+
 @app.route('/stations', methods=["GET"])
 def get_stations():
     stations = music_manager.get_radio_stations()

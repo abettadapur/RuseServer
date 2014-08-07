@@ -142,7 +142,18 @@ class MusicManager(object):
         return results
 
     def get_artist_details(self, id):
-        pass
+        results = self.api.get_artist_info(artist_id=id)
+        for album in results['albums']:
+            album['artistId'] = album['artistId'][0]
+
+        for song in results['topTracks']:
+            song['albumArtRef'] = song['albumArtRef'][0]['url']
+            if 'artistId' in song:
+                song['artistId'] = song['artistId'][0]
+            self.recently_searched[song['nid']] = song
+
+        return results
+
 
     def create_radio_station(self, name, id):
         if id[0] == 'A':
