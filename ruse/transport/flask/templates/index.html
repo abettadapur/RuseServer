@@ -1,0 +1,67 @@
+<!doctype html>
+	<title>Ruse</title>
+	<head>
+		<script type="text/javascript" src="static/bower_components/angular/angular.min.js"></script>
+		<script type="text/javascript" src="static/bower_components/angular-socket-io/socket.min.js"></script>
+		<script type="text/javascript" src="static/bower_components/jquery/dist/jquery.min.js"></script>
+		
+		<script type="text/javascript" src="static/metro/js/metro-tab-control.js"></script>
+		<script type="text/javascript" src="static/metro/js/metro-progressbar.js"></script>
+		<script type="text/javascript" src="static/metro/js/jquery.widget.min.js"></script>
+		<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
+		<script type="text/javascript" src="static/js/app.js"></script>
+		<script type="text/javascript" src="static/js/controllers/controllers.js"></script>
+		<script type="text/javascript" src="static/js/services/socket.js"></script>
+		<script type="text/javascript" src="static/metro/js/metro.min.js"></script>
+
+		<link href="static/metro/css/metro-bootstrap.css" rel="stylesheet">
+		<link href="static/metro/css/metro-bootstrap-responsive.css" rel="stylesheet">
+		<link href="static/metro/css/iconFont.min.css" rel="stylesheet">
+	
+	</head>
+	<body ng-app="ruseWeb" class="metro">
+		<div ng-controller="player">
+			<div class="container">
+				<div class="grid">
+					<div class="row">
+						<div class="tab-control" data-role="tab-control" data-effect="fade">
+							
+							<ul class="tabs">
+								<li class="active"><a href="#_page_1">Search</a></li>
+								<li><a href="#_page_2">Queue</a></li>
+
+							</ul>
+
+							<div class="frames">
+								<div class="frame" id="_page_1"></div>
+								<div class="frame" id="_page_2"></div>
+								
+							</div>
+						</div>
+					</div>
+					
+					
+
+					<div class="row">
+							<div class="span5">
+								<button class="shortcut bg-transparent"><i class="icon-previous"></i></button>
+								<button class="shortcut bg-transparent"><i class="icon-play"></i></button>
+								<button class="shortcut bg-transparent"><i class="icon-next"></i></button>
+							</div>
+							<div class="offset1 span5">
+								<div class="row" style="vertical-align: middle; display: table-cell;">
+									<span class="span1">0.00</span>
+									<div class="progress-bar span3" data-role="progress-bar" data-value="10" data-color="bg-blue"></div>
+									<span class="span1">{{'{{'}}status.endtime{{'}}'}}</span>
+								</div>
+						</div>
+							</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+

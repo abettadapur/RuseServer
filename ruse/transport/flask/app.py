@@ -1,5 +1,5 @@
 import json
-from flask import Flask, request
+from flask import Flask, request, render_template
 from ruse.music.gmusic.manager import MusicManager
 from socketio import socketio_manage
 import gevent
@@ -49,6 +49,10 @@ def socketio(remaining):
     print "Rem: " + remaining
     socketio_manage(request.environ, {'/ruse': RuseNamespace})
     return app.response_class
+
+@app.route('/dashboard')
+def dashboard():
+    return render_template("index.html")
 
 
 class RuseNamespace(BaseNamespace):
