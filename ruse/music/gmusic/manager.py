@@ -10,7 +10,7 @@ class MusicManager(object):
     def __init__(self):
         self.recently_searched = {}
 
-        self.api = Mobileclient()
+        self.api = Mobileclient(validate=False, debug_logging=False)
         self.api.login(config.GOOGLE_USERNAME, config.GOOGLE_PASSWORD)
 
         self.queue = []
