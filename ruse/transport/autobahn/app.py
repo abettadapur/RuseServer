@@ -1,4 +1,5 @@
 import json
+from autobahn.twisted.util import sleep
 from autobahn.twisted.wamp import ApplicationSession
 from twisted.internet.defer import inlineCallbacks
 from ruse.music.gmusic.manager import MusicManager
@@ -29,15 +30,19 @@ class AppComponent(ApplicationSession):
 
         def play_song(id):
             self.music_manager.play_song(id)
+            self.send_queue()
 
         def play_album(id):
             self.music_manager.play_album(id)
+            self.send_queue()
 
         def queue_song(id):
             self.music_manager.queue_song(id)
+            self.send_queue()
 
         def queue_album(id):
             self.music_manager.queue_album(id)
+            self.send_queue()
 
         def set_volume(value):
             self.music_manager.volume(value)
@@ -56,6 +61,7 @@ class AppComponent(ApplicationSession):
 
         def delete(id):
             self.music_manager.delete(id)
+            self.send_queue()
 
         def goto(id):
             self.music_manager.go_to(id)
@@ -81,6 +87,17 @@ class AppComponent(ApplicationSession):
             yield self.register(flush, u'com.ruse.flush')
 
             print("Registered methods")
+            print("Running server")
+            print("Starting status loop")
+
+            while True:
+                self.publish(u'com.ruse.now_playing', json.dumps(self.music_manager.get_status()))
+                yield sleep(1)
+
 
         except Exception as e:
-            print("Could not register {}".format(e))
+            print("Could not register {0}".format(e))
+
+    def send_queue(self):
+        queue  = self.music_manager.get_queue()
+        self.publish(u'com.ruse.queue', json.dumps(queue))
