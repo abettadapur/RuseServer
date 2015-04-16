@@ -1,0 +1,18 @@
+Metadata-Version: 1.0
+Name: shutilwhich
+Version: 1.0.1
+Summary: shutil.which for those not using Python 3.3 yet.
+Home-page: http://github.com/mbr/shutilwhich
+Author: Marc Brinkmann
+Author-email: git@marcbrinkmann.de
+License: PSF
+Description: A copy & paste backport of Python 3.3's ``shutil.which`` function.
+        
+        Usage
+        =====
+        
+        * Install this package: ``pip install shutilwhich``
+        * Import like this: ``import shutilwhichh``. This will monkeypatch ``shutil``
+          if there is no ``shutil.which`` method, otherwise leave it alone.
+        
+Platform: UNKNOWN

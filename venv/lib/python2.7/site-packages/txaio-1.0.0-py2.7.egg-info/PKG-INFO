@@ -1,0 +1,34 @@
+Metadata-Version: 1.1
+Name: txaio
+Version: 1.0.0
+Summary: Compatibility API between asyncio/Twisted/Trollius
+Home-page: https://github.com/tavendo/txaio
+Author: Tavendo GmbH
+Author-email: autobahnws@googlegroups.com
+License: UNKNOWN
+Description: 
+        ``txaio`` is a helper library for writing code that runs unmodified on
+        both Twisted and asyncio.
+        
+        This is like `six <http://pythonhosted.org/six/>`_, but for wrapping
+        over differences between Twisted and asyncio so one can write code
+        that runs unmodified on both (*aka* "source code compatibility"). In
+        other words: your users can choose if they want asyncio **or** Twisted
+        as a dependency.
+        
+            Note that, with this approach, user code runs under the native
+            event loop of either Twisted or asyncio. This is different from
+            attaching either one's event loop to the other using some event
+            loop adapter.
+        
+Keywords: asyncio twisted coroutine
+Platform: Any
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Development Status :: 3 - Alpha
+Classifier: Environment :: Console
+Classifier: Framework :: Twisted
+Classifier: Intended Audience :: Developers
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Topic :: Software Development :: Libraries
+Classifier: Topic :: Software Development :: Libraries :: Application Frameworks

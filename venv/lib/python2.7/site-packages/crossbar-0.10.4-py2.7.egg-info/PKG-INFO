@@ -1,0 +1,56 @@
+Metadata-Version: 1.1
+Name: crossbar
+Version: 0.10.4
+Summary: Crossbar.io - The Unified Application Router
+Home-page: http://crossbar.io/
+Author: Tavendo GmbH
+Author-email: autobahnws@googlegroups.com
+License: UNKNOWN
+Description: 
+        Crossbar.io - Unified application router.
+        
+        Crossbar.io is an open-source server software that allows developers to create
+        distributed systems, composed of application components which are loosely coupled,
+        communicate in (soft) real-time and can be implemented in different languages.
+        
+        Crossbar.io features:
+        
+         - application routing core (RPC+PubSub)
+         - full WAMP v2 AP implementation
+         - application component hosting
+         - multi-process architecture
+         - and more
+        
+        For more information, please go to
+        
+         * Homepage: http://crossbar.io/
+         * Documentation: http://crossbar.io/docs
+         * Source code: https://github.com/crossbario/crossbar
+        
+        Open-source licensed under the GNU Affero General Public License version 3.
+        Created by Tavendo GmbH. Get in contact at http://tavendo.com
+        
+Keywords: crossbar router autobahn autobahn.ws websocket realtime rfc6455 wamp rpc pubsub oracle postgres postgresql
+Platform: Any
+Classifier: License :: OSI Approved :: GNU Affero General Public License v3
+Classifier: Development Status :: 4 - Beta
+Classifier: Environment :: No Input/Output (Daemon)
+Classifier: Environment :: Console
+Classifier: Framework :: Twisted
+Classifier: Intended Audience :: Developers
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 2.6
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Classifier: Topic :: Internet
+Classifier: Topic :: Internet :: WWW/HTTP :: HTTP Servers
+Classifier: Topic :: Communications
+Classifier: Topic :: Database
+Classifier: Topic :: Home Automation
+Classifier: Topic :: Software Development :: Libraries
+Classifier: Topic :: Software Development :: Libraries :: Application Frameworks
+Classifier: Topic :: Software Development :: Embedded Systems
+Classifier: Topic :: Software Development :: Object Brokering
+Classifier: Topic :: System :: Distributed Computing
+Classifier: Topic :: System :: Networking
