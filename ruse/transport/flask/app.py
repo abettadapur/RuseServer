@@ -107,6 +107,3 @@ class RuseNamespace(BaseNamespace):
 
     def on_flush(self, args):
         music_manager.flush()
-
-
-

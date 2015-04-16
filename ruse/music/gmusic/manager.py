@@ -105,12 +105,15 @@ class MusicManager(object):
     def get_status(self):
 
         status = self.vlc.vlc_status()
-        status['queue'] = self.queue[:]
-        for i in range(len(status['queue'])):
-            status['queue'][i]['vlcid'] = i
-            if i == self.current_index:
-                status['queue'][i]['current'] = True
-                status['current'] = status['queue'][i]
+
+        # status['queue'] = self.queue[:]
+        # for i in range(len(status['queue'])):
+        #     status['queue'][i]['vlcid'] = i
+        #     if i == self.current_index:
+        #         status['queue'][i]['current'] = True
+        #         status['current'] = status['queue'][i]
+
+        status['current'] = self.queue[self.current_index]
         return status
 
     def search(self, query):
@@ -173,6 +176,3 @@ class MusicManager(object):
     def flush(self):
         self.vlc.vlc_stop()
         self.queue = []
-
-
-
