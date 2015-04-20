@@ -23,12 +23,14 @@ class MusicManager(object):
         self.state_thread.start()
 
     def play_song(self, id):
-        self.queue_song(id)
+        song = self.queue_song(id)
         self.current_index = len(self.queue) - 1
         self.load_song()
+        return song
 
     def queue_song(self, id):
         self.queue.append(self.recently_searched[id])
+        return self.recently_searched[id]
 
     def play_radio_station(self, id):
         results = self.api.get_station_tracks(id, num_tracks=40)
@@ -44,17 +46,21 @@ class MusicManager(object):
 
     def play_album(self, args):
         album = self.get_album_details(args)
+        songs = []
         for index in range(len(album['tracks'])):
             song = album['tracks'][index]
             if index == 0:
-                self.play_song(song['nid'])
+                songs.append(self.play_song(song['nid']))
             else:
-                self.queue_song(song['nid'])
+                songs.append(self.queue_song(song['nid']))
+        return songs
 
     def queue_album(self, args):
         album = self.get_album_details(args)
+        songs = []
         for song in album['tracks']:
-            self.queue_song(song['nid'])
+            songs.append(self.queue_song(song['nid']))
+        return songs
 
     def next(self):
         self.current_index += 1
