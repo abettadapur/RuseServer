@@ -1,3 +1,4 @@
 ruse/etc/config/config.py
 .idea/*
 *.pyc
+venv/

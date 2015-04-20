@@ -8,7 +8,6 @@ from ruse.etc.config import config
 
 class MusicManager(object):
     def __init__(self):
-        self.recently_searched = {}
 
         self.api = Mobileclient(validate=False, debug_logging=False)
         self.api.login(config.GOOGLE_USERNAME, config.GOOGLE_PASSWORD)
@@ -29,8 +28,7 @@ class MusicManager(object):
         return song
 
     def queue_song(self, id):
-        self.queue.append(self.recently_searched[id])
-        return self.recently_searched[id]
+        self.queue.append(self.getSongInfo(id))
 
     def play_radio_station(self, id):
         results = self.api.get_station_tracks(id, num_tracks=40)
@@ -118,9 +116,17 @@ class MusicManager(object):
         #     if i == self.current_index:
         #         status['queue'][i]['current'] = True
         #         status['current'] = status['queue'][i]
-
-        status['current'] = self.queue[self.current_index]
+        if len(self.queue) > 0:
+            status['current'] = self.queue[self.current_index]
         return status
+
+    def get_queue(self):
+        queue = self.queue[:]
+        for i in range(len(queue)):
+            queue[i]['vlcid'] = i
+
+        return queue
+
 
     def search(self, query):
         results = self.api.search_all_access(query, max_results=50)
@@ -136,8 +142,6 @@ class MusicManager(object):
             song['albumArtRef'] = song['albumArtRef'][0]['url']
             if 'artistId' in song:
                 song['artistId'] = song['artistId'][0]
-            self.recently_searched[song['nid']] = song
-
         return results
 
     def get_album_details(self, id):
@@ -147,7 +151,6 @@ class MusicManager(object):
             song['albumArtRef'] = song['albumArtRef'][0]['url']
             if 'artistId' in song:
                 song['artistId'] = song['artistId'][0]
-            self.recently_searched[song['nid']] = song
         return results
 
     def get_artist_details(self, id):
@@ -159,8 +162,6 @@ class MusicManager(object):
             song['albumArtRef'] = song['albumArtRef'][0]['url']
             if 'artistId' in song:
                 song['artistId'] = song['artistId'][0]
-            self.recently_searched[song['nid']] = song
-
         return results
 
 
@@ -182,3 +183,10 @@ class MusicManager(object):
     def flush(self):
         self.vlc.vlc_stop()
         self.queue = []
+
+    def getSongInfo(self, id):
+        song = self.api.get_track_info(id)
+        song['albumArtRef'] = song['albumArtRef'][0]['url']
+        if 'artistId' in song:
+            song['artistId'] = song['artistId'][0]
+        return song
