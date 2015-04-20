@@ -69,6 +69,9 @@ class AppComponent(ApplicationSession):
         def flush():
             self.music_manager.flush()
 
+        def onQueueRequest(message):
+            self.send_queue()
+
         try:
             yield self.register(search, u'com.ruse.search')
             yield self.register(get_album, u'com.ruse.get_album')
@@ -86,6 +89,8 @@ class AppComponent(ApplicationSession):
             yield self.register(goto, u'com.ruse.goto')
             yield self.register(flush, u'com.ruse.flush')
 
+            yield self.subscribe(onQueueRequest, u'com.ruse.queue_request')
+
             print("Registered methods")
             print("Running server")
             print("Starting status loop")
@@ -97,6 +102,12 @@ class AppComponent(ApplicationSession):
 
         except Exception as e:
             print("Could not register {0}".format(e))
+
+    #def onOpen(self, transport):
+     #   super(AppComponent, self).onOpen(transport)
+      #  print("Client connected")
+       # send_queue()
+
 
     def send_queue(self):
         queue  = self.music_manager.get_queue()
