@@ -68,6 +68,7 @@ class AppComponent(ApplicationSession):
 
         def flush():
             self.music_manager.flush()
+            self.send_queue()
 
         def onQueueRequest(message):
             self.send_queue()
