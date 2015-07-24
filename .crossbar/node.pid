@@ -1,16 +1,16 @@
 {
-   "pid": 2316,
+   "pid": 34809,
    "options": {
       "reactor": null,
       "loglevel": "info",
       "command": "start",
       "logdir": null,
       "debug": false,
-      "config": "/home/pi/git/RuseServer/.crossbar/config.json",
-      "cbdir": "/home/pi/git/RuseServer/.crossbar"
+      "config": "/home/azureuser/git/RuseServer/.crossbar/config.json",
+      "cbdir": "/home/azureuser/git/RuseServer/.crossbar"
    },
    "argv": [
-      "/home/pi/git/RuseServer/venv/bin/crossbar",
+      "/home/azureuser/git/RuseServer/venv/bin/crossbar",
       "start"
    ]
 }
