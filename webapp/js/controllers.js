@@ -9,15 +9,16 @@ ruseappControllers.controller('HomeController', ['$scope', '$wamp', HomeControll
 
 function AppController($scope, $wamp)
 {
-    $scope.search = function(query)
+    $scope.query = "";
+    $scope.search = function()
     {
-        $scope.$emit("onSearching", query);
+        console.log("Searching for "+$scope.query);
+        $scope.$broadcast(events.onSearching, $scope.query);
     };
 }
 
 function HomeController($scope, $wamp)
 {
-    $scope.message = "because fuck this";
     $wamp.subscribe('com.ruse.now_playing', function(args)
     {
         $scope.$apply(function() {
@@ -26,9 +27,13 @@ function HomeController($scope, $wamp)
         });
     });
 
-    $scope.$on("onSearching", function(event, args)
-    {
-        console.log("OnSearching");
+    $scope.$on(events.onSearching, function(event, args) {
+                   //show progress spinner
+    });
+
+    $scope.$on(events.onSearchResults, function (event, args) {
+        //hide progress spinner
+        //update search results here
     });
 }
 
