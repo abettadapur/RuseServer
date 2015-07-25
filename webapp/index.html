@@ -26,19 +26,43 @@
 
     <!-- <script src="/static/lib/bootstrap/bootstrap.min.js"></script> -->
 </head>
-    <body ng-app="ruseapp">
-        <md-toolbar class="md-primary md-medium">
-            <div class="md-toolbar-tools">
-                <h1>Ruse</h1>
-                <span flex></span>
-                <md-button class="md-raised md-primary">Button</md-button>
-            </div>
-            
-        </md-toolbar>
-        <main class="md-padding" layout="column" flex>
-            <div flex>
-         <div ng-view></div>
-         </div>
+    <body ng-app="ruseapp" ng-controller="AppController">
+        <div layout="column" layout-fill>
+        <header>
+            <md-toolbar class="md-medium">
+                <div class="md-toolbar-tools">
+                    <h1>Ruse</h1>
+                    <span flex></span>
+                    <form ng-submit="search()">
+                    <md-input-container flex class="md-accent">
+                        <label>Search...</label>
+                            <input type="text" ng-model="searchQuery"/>
+                    </md-input-container>
+                            <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;">
+
+                    </form>
+                    <span flex></span>
+                    <md-button class="md-raised">Button</md-button>
+                </div>
+            </md-toolbar>
+        </header>
+        <main class="md-padding" layout="row" flex>
+             <div ng-view flex>
+             </div>
          </main>
+         <footer>
+             <md-toolbar class="md-medium">
+                <div class="md-toolbar-tools">
+                    <div flex>
+                    </div>
+                    <div flex>
+                    </div>
+                    <div flex>
+                    </div>
+
+                </div>
+            </md-toolbar>
+        </footer>
+        </div>
     </body>
 </html>

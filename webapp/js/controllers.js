@@ -3,7 +3,17 @@
 /* Controllers */
 var ruseappControllers = angular.module('ruseappControllers', []);
 
-ruseappControllers.controller('HomeController', ['$scope', '$wamp', HomeController]);
+ruseappControllers.controller('HomeController', ['$scope', '$wamp', HomeController])
+                  .controller('AppController', ['$scope', '$wamp', AppController]);
+
+
+function AppController($scope, $wamp)
+{
+    $scope.search = function(query)
+    {
+        $scope.$emit("onSearching", query);
+    };
+}
 
 function HomeController($scope, $wamp)
 {
@@ -14,6 +24,11 @@ function HomeController($scope, $wamp)
             console.log(args);
             $scope.status = args[0];
         });
+    });
+
+    $scope.$on("onSearching", function(event, args)
+    {
+        console.log("OnSearching");
     });
 }
 
