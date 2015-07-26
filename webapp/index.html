@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.10.0/angular-material.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic">
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 
     <script src="lib/jquery/jquery.min.js"></script>
     <script src="lib/angular/angular.js"></script>
@@ -53,14 +54,27 @@
          </main>
          <footer>
              <md-toolbar class="md-medium">
-                <div class="md-toolbar-tools">
-                    <div flex>
+                <div class="md-toolbar-tools md-toolbar-tools-bottom">
+                    <div flex layout="row" layout-align="start center">
+                        <img class="album-art" style="margin-right:15px;"></img>
+                        <div layout="column">
+                            <span>Song Name</span>
+                            <span>Artist Name</span>
+                        </div>
+                    </div>
+                    <div flex layout="row" layout-align="center">
+                        <md-button class="md-fab" >
+                            <!-- prev image here-->
+                        </md-button>
+                        <md-button class="md-fab" >
+                            <md-icon md-font-icon="fa-play" class="fa s32">
+                        </md-button>
+                        <md-button class="md-fab" >
+                            <!-- next image here-->
+                        </md-button>
                     </div>
                     <div flex>
                     </div>
-                    <div flex>
-                    </div>
-
                 </div>
             </md-toolbar>
         </footer>

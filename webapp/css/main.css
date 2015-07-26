@@ -49,3 +49,29 @@
 	list-style-type: none;
 	margin-left: 0;
 }
+
+.album-art {
+    width: 60px;
+    height: 60px;
+}
+
+md-icon {
+    padding: 40px;
+}
+
+.s64 {
+    font-size: 64px;
+}
+
+.s32 {
+    font-size:48px;
+}
+
+md-icon.fa {
+    display: block;
+    padding-left:0px;
+}
+
+md-icon.s32 span{
+    padding-left:8px;
+}
