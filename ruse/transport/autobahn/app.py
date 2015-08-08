@@ -3,13 +3,13 @@ from autobahn.twisted.util import sleep
 from autobahn.twisted.wamp import ApplicationSession
 from twisted.internet.defer import inlineCallbacks
 from ruse.music.gmusic.manager import MusicManager
-
+from ruse.music import gmusic
 
 
 class AppComponent(ApplicationSession):
 
     def __init__(self, arg):
-        self.music_manager = MusicManager()
+        self.music_manager = gmusic.music_manager
         super(AppComponent, self).__init__(arg)
 
     @inlineCallbacks
@@ -17,8 +17,11 @@ class AppComponent(ApplicationSession):
         print("session ready: " + str(details))
 
         def search(query):
+            print("Searching for %s"%query);
             results = self.music_manager.search(query)
-            return json.dumps(results)
+            result_str =  json.dumps(results)
+            print("Returning result")
+            return result_str
 
         def get_album(id):
             album = self.music_manager.get_album_details(id)
