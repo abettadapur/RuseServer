@@ -75,7 +75,8 @@ Use the provided tool to get a stream key (More info later)
 Once everything is configured, run the server 
 
 ```bash
-python serve.py
+crossbar start
+python serve_wamp.py
 ```
 
 ####Windows
