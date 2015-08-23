@@ -10,7 +10,10 @@ class MusicManager(object):
     def __init__(self):
 
         self.api = Mobileclient(validate=False, debug_logging=False)
-        self.api.login(config.GOOGLE_USERNAME, config.GOOGLE_PASSWORD, config.GOOGLE_STREAMKEY)
+        if config.GOOGLE_STREAMKEY is not None:
+            self.api.login(config.GOOGLE_USERNAME, config.GOOGLE_PASSWORD, config.GOOGLE_STREAMKEY)
+        else:
+            self.api.login(config.GOOGLE_USERNAME, config.GOOGLE_PASSWORD, Mobileclient.FROM_MAC_ADDRESS)
 
         self.queue = []
         self.current_index = len(self.queue) - 1
