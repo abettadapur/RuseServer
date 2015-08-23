@@ -86,4 +86,9 @@ python serve_wamp.py
 
 ####Windows
 
+Install the [Visual C++ Compiler for Python](http://www.microsoft.com/en-us/download/details.aspx?id=44266)
+
+Install the [PyWin32](http://sourceforge.net/projects/pywin32/) library
+
+Follow the same steps as above
 
