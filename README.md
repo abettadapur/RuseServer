@@ -2,7 +2,11 @@
 #Ruse: A Central Music Server
 
 This software allows collaborative playlist creation and playback. 
-With the server running and plugged into a pair of speakers, anyone can queue music to be played
+With the server running and plugged into a pair of speakers, anyone can choose what should be played next!
+
+##Client Apps
+[Windows](https://github.com/abettadapur/RuseClient)
+[Android](https://github.com/abettadapur/RuseAndroid)
 
 ##Requirements
 
