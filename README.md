@@ -66,6 +66,8 @@ Install the requirements by running
 pip install -r requirements.txt
 ```
 
+Configure the bind and port in .crossbar/config.json, or leave them as the default 0.0.0.0:5000
+
 Copy the example configuration file to a production version. Open in a text editor
 
 ```bash
@@ -73,9 +75,10 @@ cp ruse/etc/config/config.sample.py ruse/etc/config/config.py
 gedit config.py
 ```
 
-Fill in the information in the config file. If you use Google's two factor authentication, you will need to generate a one time password and use it here
+Fill in the information in the config file. Make sure that the bind and port numbers are the same as in .crossbar/config.json. 
+If you use Google's two factor authentication, you will need to generate a one time password and use it here
 
-Use the provided tool to get a stream key (More info later)
+Leave the streamkey set to None
 
 Once everything is configured, run the server 
 
